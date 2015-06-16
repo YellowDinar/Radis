@@ -32,10 +32,12 @@ $direct = new Direct();
 //         echo print_r($leads[$lead])."<br>";
 //     }
 // }
-$token = '4e399a6e3fdb434197d4e90a8ec29e9c';
-$date = date('Ymd');
-$url = 'https://api-metrika.yandex.ru/stat/traffic/summary?oauth_token='.$token.'&id=30720158&date1='.$date.'&date2='.$date;
-$result = file_get_contents($url);
-echo print_r(explode(' ', $result))."<br>";
-echo $url."<br>";
+// $token = '4e399a6e3fdb434197d4e90a8ec29e9c';
+// $date = date('Ymd');
+// $url = 'https://api-metrika.yandex.ru/stat/traffic/summary?oauth_token='.$token.'&id=30720158&date1='.$date.'&date2='.$date;
+// $result = file_get_contents($url);
+// echo print_r(explode(' ', $result))."<br>";
+echo intval(0.34/2);
+echo "<br>";
+echo 0.34%2;
 ?>

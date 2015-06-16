@@ -4,9 +4,9 @@ class Direct {
 
     private $direct_url = 'https://api.direct.yandex.ru/live/v4/json/';
 
-    private $login = 'timerlain-bikstudio';
+    private $login = 'svai-timerlain-bikstudio';
 
-    private $token = '4e399a6e3fdb434197d4e90a8ec29e9c';
+    private $token = 'e8c19cb7d87744bdbdb5133dbe80dbe9';
 
     public function request($method, $params=null) {
 

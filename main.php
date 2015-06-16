@@ -1,7 +1,5 @@
 <?php
 // 30720158 metrika
-ini_set('display_errors',1);
-error_reporting(E_ALL);
 ini_set('date.timezone', 'Europe/Moscow');
 ini_set('max_execution_time', 1000);
 include('direct.php');
@@ -16,10 +14,11 @@ $link = $db->auth();
     $leads = file('http://xn--80ajigieluo.xn--p1ai/%D0%B0%D0%BA%D1%86%D0%B8%D1%8F/app/getVizits.php');
     $leads = (string)$leads[count($leads)-1];
     $leads = json_decode($leads);
+    
     $today = date('Y-m-d');
     $campaigns = $db->getCampaigns($link);
-    for($c = 0, $c_len = count($campaigns); $c < $c_len; $c++) {
-        // echo $c." ".$campaigns[$c]['id']."<br>";
+    
+    for($c = 0, $c_len = count($campaigns); $c < 2; $c++) {
         $params = array(
             'CampaignID' => $campaigns[$c]['id'],
             'StartDate' => $today,
@@ -38,10 +37,10 @@ $link = $db->auth();
         $direct->request('CreateNewReport', $params);
         sleep(3);
         while(strcmp($direct->request('GetReportList')->data[0]->StatusReport, "Done") != 0) {
-            echo 'НЕТ<br>';
+            echo 'Нет';
         }
         $report = $direct->request('GetReportList')->data[0];
-        echo 'ГОТОВО<br>';
+        echo 'Готово<br>';
         $file = getFile($report->Url);
         // echo $file.'<br>';
         $direct->request('DeleteReport', $report->ReportID);
@@ -56,7 +55,7 @@ $link = $db->auth();
         if (file_exists($files[$file])) {
             // echo "Exist<br>";
             $xml = simplexml_load_file($files[$file]);
-            echo print_r($xml)."<br>";
+            // echo print_r($xml)."<br>";
             $rows = $xml->stat->row;
             for($row = 0, $rows_len = count($rows); $row < $rows_len; $row++) {
                 if(count($rows[$row]->attributes()) == 8 && $rows[$row]->attributes()[6][0] > 0){
@@ -108,6 +107,10 @@ $link = $db->auth();
                     
                     // Sum
                     if($sum > 0) {
+                        echo "sum > 0<br>";
+                        echo intval($sum/2);
+                        echo $sum%2;
+                        echo "<br>";
                         $sum1 = $sum / 2;
                         $sum2 = $sum - $sum1;
                     } else {
@@ -118,28 +121,33 @@ $link = $db->auth();
                     $leads1 = 0;
                     $leads2 = 0;
                     
-                    if(count($leads) > 0) {
-                        for($lead = 0, $leads_len = count($leads); $lead < $leads_len; $lead++) {
-                            if(strcmp($leads[$lead][1], $area) == 0 && strcmp($leads[$lead][2], $key_value) == 0) {
-                                if(strcmp($leads[$lead][3], "Заявка") == 0) {
-                                    $lead2++;
-                                } elseif(strcmp($leads[$lead][3], "Звонок") == 0) {
-                                    $leads1++;
-                                }
-                            }
-                            // echo print_r($leads[$lead])."<br>";
-                        }
-                    }
+                    // if(count($leads) > 0) {
+                    //     for($lead = 0, $leads_len = count($leads); $lead < $leads_len; $lead++) {
+                            
+                    //         if(strcmp($leads[$lead][1], $area) == 0 && strcmp($leads[$lead][2], $key_value) == 0) {
+                    //             echo "YES<br>";
+                    //             if(strcmp($leads[$lead][3], "Заявка") == 0) {
+                    
+                    //                 $leads2++;
+                    //             } elseif(strcmp($leads[$lead][3], "Звонок") == 0) {
+                    //                 $leads1++;
+                    //             }
+                    //         }
+                    //         echo print_r($leads[$lead])."<br>";
+                    //     }
+                    // }
+                    
                     echo $key.", ".$area_id.", ".$shows."(".$shows1.", ".$shows2.")".", ".$cliks."(".$cliks1.", ".$cliks2.")".", ".$sum."(".$sum1.", ".$sum2.")".", "."leads"."(".$leads1.", ".$leads2.")".", ".$current_date[0].", ".$current_date[1];
+                    // echo "Leads: ".$lead2;
                     echo "<br>";
                     
-                    $delta1 = $db->getDelta($link ,$key, $area_id, 1, $current_date[0]);
-                    $delta1 = $delta1[0];
-                    $delta2 = $db->getDelta($link ,$key, $area_id, 2, $current_date[0]);
-                    $delta2 = $delta2[0];
-                    echo "<br>_______________________________________________________________________________________________________________________________________________<br>";
-                    // 
-                    // echo print_r($db->getDelta($link ,$key, $area_id, 2, $current_date[0]))."<br>";
+                    // $delta1 = $db->getDelta($link ,$key, $area_id, 1, $current_date[0]);
+                    // $delta1 = $delta1[0];
+                    // $delta2 = $db->getDelta($link ,$key, $area_id, 2, $current_date[0]);
+                    // $delta2 = $delta2[0];
+                    // echo "<br>_______________________________________________________________________________________________________________________________________________<br>";
+                    // // 
+                    // // echo print_r($db->getDelta($link ,$key, $area_id, 2, $current_date[0]))."<br>";
                     echo $db->insertMainTable($link, $key, $area_id, $shows1-$delta1['sum_shows'], $cliks1-$delta1['sum_clicks'], $sum1-$delta1['sum_sum'], 1, $leads1-$delta1['sum_leads'], $current_date[0], $current_date[1]);
                     echo $db->insertMainTable($link, $key, $area_id, $shows2-$delta2['sum_shows'], $cliks2-$delta2['sum_clicks'], $sum2-$delta2['sum_sum'], 2, $leads2-$delta2['sum_leads'], $current_date[0], $current_date[1]);
                 }
@@ -160,7 +168,7 @@ $link = $db->auth();
 function getFile($url) {
     if (!empty($url))
     {
-    
+ 
     $file = basename($url);
     if (file_get_contents($url))
     {
@@ -168,15 +176,15 @@ function getFile($url) {
     $f = fopen( "$file", "w" );
     if (fwrite( $f, $content ) === FALSE)
     {
-    echo "Не могу произвести запись в файл.";
+    echo "not write in file";
     exit;
     }
-    else {
+    else {  
             chmod($file, 0777);
             fclose( $f );
         }
     }
-    else echo "Не могу качать файл.";
+    else echo "not download file";
     }
     return $file;
 }

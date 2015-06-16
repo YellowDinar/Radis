@@ -6,7 +6,7 @@
 <?php
 ini_set('display_errors',1);
 error_reporting(E_ALL);
-include('db.php');
+include('dbase.php');
 $db = new Database();
 $link = $db->auth();
 $data = $db->getTable($link, "uniq_keys");
