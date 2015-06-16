@@ -21,7 +21,12 @@ $data = $db->getTable($link, "area");
 <tr>
     <td><?php echo $data[$i]['id'] ?></td>
     <td><?php echo $data[$i]['value'] ?></td>
-    <td><?php echo $data[$i]['type'] ?></td>
+    <td><?php 
+    if(strcmp($data[$i]['type'], "search") == 0){
+        echo "Поиск";
+    } else {
+        echo "РСЯ";
+    } ?></td>
 </tr>
 <?php } ?>
 </table>
