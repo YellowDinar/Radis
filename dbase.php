@@ -1,7 +1,7 @@
 <?php
 ini_set('display_errors',1);
 error_reporting(E_ALL);
-class Database {
+class DB {
 
     private $hostname = "localhost";
     private $name = "root";
@@ -212,6 +212,23 @@ class Database {
         return $res;
     }
 
-}
+public function insertLeads($link, $id, $key, $source, $area, $region) {
 
+ 
+
+        $query_to_db = "INSERT INTO `lead` (id, key, source, area, region) VALUES ('$id', '$key', '$source', '$area', 
+
+'$region');";
+
+ 
+
+        $result = mysqli_query($link, $query_to_db);
+
+ 
+
+    }
+
+    
+
+    
 ?>
