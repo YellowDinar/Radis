@@ -20,12 +20,7 @@ $data = $db->getTable($link, "area");
 <?php for($i = 0, $data_len = count($data); $i < $data_len; $i++) { ?>
 <tr>
     <td><?php echo $data[$i]['id'] ?></td>
-    <td><?php 
-        if ($data[$i]['value']=='context') {
-            echo "РСЯ";
-        } else {
-            echo "Поиск";
-        } ?></td>
+    <td><?php echo $data[$i]['value'] ?></td>
     <td><?php echo $data[$i]['type'] ?></td>
 </tr>
 <?php } ?>
